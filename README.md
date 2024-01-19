@@ -1,29 +1,10 @@
-# Chrome Extension TypeScript Starter
+# Canonicalizer Chrome Extension
 
-![build](https://github.com/chibat/chrome-extension-typescript-starter/workflows/build/badge.svg)
+- TO DO: add CircleCI / Renovate badges
+- TO DO: add link to Chrome Web Store listing
+- TO DO: add embedded Youtube video
 
-Chrome Extension, TypeScript and Visual Studio Code
-
-## Prerequisites
-
-* [node + npm](https://nodejs.org/) (Current Version)
-
-## Option
-
-* [Visual Studio Code](https://code.visualstudio.com/)
-
-## Includes the following
-
-* TypeScript
-* Webpack
-* React
-* Jest
-* Example Code
-    * Chrome Storage
-    * Options Version 2
-    * content script
-    * count up badge number
-    * background
+# Contributing
 
 ## Project Structure
 
@@ -37,10 +18,6 @@ Chrome Extension, TypeScript and Visual Studio Code
 ```
 npm install
 ```
-
-## Import as Visual Studio Code project
-
-...
 
 ## Build
 
@@ -68,3 +45,7 @@ Load `dist` directory
 
 ## Test
 `npx jest` or `npm run test`
+
+## Publishing to Chrome Web Store
+
+- TO DO: add instructions here

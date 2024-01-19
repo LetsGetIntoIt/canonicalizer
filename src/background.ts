@@ -1,6 +1,5 @@
-function polling() {
-  // console.log("polling");
-  setTimeout(polling, 1000 * 30);
-}
+import { sendCanonicalize } from "./utils/messages";
 
-polling();
+chrome.action.onClicked.addListener((tab) => {
+  sendCanonicalize(undefined, { tabId: tab.id });
+});

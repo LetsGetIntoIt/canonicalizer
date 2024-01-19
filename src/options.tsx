@@ -1,69 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { createRoot } from "react-dom/client";
+import { useChromeStorageSync } from "./utils/useChromeStorageSync";
+import { ALWAYS_CANONICALIZE_OPTION_NAME, Options } from "./utils/optionsSchema";
 
 const Options = () => {
-  const [color, setColor] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
-  const [like, setLike] = useState<boolean>(false);
+  const [savedOptions, saveOptions] = useChromeStorageSync<Options>([ALWAYS_CANONICALIZE_OPTION_NAME]);
 
-  useEffect(() => {
-    // Restores select box and checkbox state using the preferences
-    // stored in chrome.storage.
-    chrome.storage.sync.get(
-      {
-        favoriteColor: "red",
-        likesColor: true,
-      },
-      (items) => {
-        setColor(items.favoriteColor);
-        setLike(items.likesColor);
-      }
-    );
-  }, []);
-
-  const saveOptions = () => {
-    // Saves options to chrome.storage.sync.
-    chrome.storage.sync.set(
-      {
-        favoriteColor: color,
-        likesColor: like,
-      },
-      () => {
-        // Update status to let user know options were saved.
-        setStatus("Options saved.");
-        const id = setTimeout(() => {
-          setStatus("");
-        }, 1000);
-        return () => clearTimeout(id);
-      }
-    );
-  };
+  const status = useMemo(() => {
+    switch (savedOptions._tag) {
+      case 'Loading': return 'Loading...';
+      case 'Saving': return 'Saving...';
+      case 'Persisted': return 'Saved';
+    }
+  }, [savedOptions]);
 
   return (
     <>
       <div>
-        Favorite color: <select
-          value={color}
-          onChange={(event) => setColor(event.target.value)}
-        >
-          <option value="red">red</option>
-          <option value="green">green</option>
-          <option value="blue">blue</option>
-          <option value="yellow">yellow</option>
-        </select>
-      </div>
-      <div>
         <label>
           <input
             type="checkbox"
-            checked={like}
-            onChange={(event) => setLike(event.target.checked)}
+            disabled={savedOptions._tag !== 'Persisted'}
+            checked={savedOptions._tag === 'Persisted' ? savedOptions.value[ALWAYS_CANONICALIZE_OPTION_NAME] : undefined}
+            onChange={(event) => {
+              saveOptions({
+                [ALWAYS_CANONICALIZE_OPTION_NAME]: event.target.checked,
+              });
+            }}
           />
-          I like colors.
+
+          Automatically canonlicalize
         </label>
       </div>
+
       <div>{status}</div>
-      <button onClick={saveOptions}>Save</button>
     </>
   );
 };
