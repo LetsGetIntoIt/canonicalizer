@@ -4,7 +4,7 @@ import { ALWAYS_CANONICALIZE_OPTION_NAME } from "./utils/optionsSchema";
 
 const canonicalize = () => {
   const canonical = getCanonicalFromDocument(document);
-  history.replaceState({}, document.title, canonical);
+  history.replaceState(history.state, document.title, canonical);
 };
 
 // Canonicalize whenever the button is clicked
@@ -13,7 +13,9 @@ canonicalizeStream.subscribe(() => {
 });
 
 (async () => {
-  // Every time the page loads, check if we are supposed to automatically canonicalize
+  // This script runs after every page has completed loading.
+  // Check if we are supposed to automatically canonicalize,
+  // and do it if appropriate
   const options = await chrome.storage.sync.get([ALWAYS_CANONICALIZE_OPTION_NAME]);
   if (options[ALWAYS_CANONICALIZE_OPTION_NAME]) {
     canonicalize();
